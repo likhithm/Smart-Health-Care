@@ -1,0 +1,156 @@
+/*
+SQLyog Ultimate v10.00 Beta1
+MySQL - 5.1.73-community : Database - ehealthcare
+*********************************************************************
+*/
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`ehealthcare` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `ehealthcare`;
+
+/*Table structure for table `logindetails` */
+
+DROP TABLE IF EXISTS `logindetails`;
+
+CREATE TABLE `logindetails` (
+  `LOGINID` int(10) NOT NULL,
+  `USERNAME` varchar(30) DEFAULT NULL,
+  `PASSWORD` varchar(30) DEFAULT NULL,
+  `TYPE` varchar(5) DEFAULT NULL,
+  `STATUS` varchar(5) DEFAULT NULL,
+  PRIMARY KEY (`LOGINID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `logindetails` */
+
+/*Table structure for table `medicaldiagnosis` */
+
+DROP TABLE IF EXISTS `medicaldiagnosis`;
+
+CREATE TABLE `medicaldiagnosis` (
+  `MEDICALDIAG_ID` int(10) NOT NULL AUTO_INCREMENT,
+  `PATIENTID` int(10) DEFAULT NULL,
+  `NO` int(10) DEFAULT NULL,
+  `SYMPTOMS` varchar(30) DEFAULT NULL,
+  `PREVIOUS_MEDICINES` varchar(30) DEFAULT NULL,
+  `MEDICAL_DIAGNOSIS` varchar(30) DEFAULT NULL,
+  `PHYSICIAN_ID` int(10) DEFAULT NULL,
+  `DIAGNOSIS_DATE` date DEFAULT NULL,
+  `STATUS` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`MEDICALDIAG_ID`),
+  KEY `PHYSICIAN_IDS` (`PHYSICIAN_ID`),
+  KEY `PATIENTIDS` (`PATIENTID`),
+  CONSTRAINT `PATIENTIDS` FOREIGN KEY (`PATIENTID`) REFERENCES `patientdetails` (`PATIENTID`),
+  CONSTRAINT `PHYSICIAN_IDS` FOREIGN KEY (`PHYSICIAN_ID`) REFERENCES `physicianappointments` (`PHYSICIANID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `medicaldiagnosis` */
+
+/*Table structure for table `patientdetails` */
+
+DROP TABLE IF EXISTS `patientdetails`;
+
+CREATE TABLE `patientdetails` (
+  `PATIENTID` int(10) NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(30) DEFAULT NULL,
+  `SEX` varchar(10) DEFAULT NULL,
+  `DOB` date DEFAULT NULL,
+  `ADDRESS` varchar(50) DEFAULT NULL,
+  `MOBILE` varchar(30) DEFAULT NULL,
+  `EMAIL` varchar(30) DEFAULT NULL,
+  `PASSWORD` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`PATIENTID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+/*Data for the table `patientdetails` */
+
+/*Table structure for table `pharmacydetails` */
+
+DROP TABLE IF EXISTS `pharmacydetails`;
+
+CREATE TABLE `pharmacydetails` (
+  `PHARMACYID` varchar(10) NOT NULL,
+  `PHARAMACYNAME` varchar(30) DEFAULT NULL,
+  `PHARAMACYREGISTRATIONNUMBER` varchar(30) DEFAULT NULL,
+  `ADDRESS` varchar(50) DEFAULT NULL,
+  `PHONENUMBER` varchar(12) DEFAULT NULL,
+  `PASSWORD` varchar(15) DEFAULT NULL,
+  `EMAIL` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`PHARMACYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `pharmacydetails` */
+
+/*Table structure for table `physicianappointments` */
+
+DROP TABLE IF EXISTS `physicianappointments`;
+
+CREATE TABLE `physicianappointments` (
+  `PHYSICIANID` int(10) NOT NULL AUTO_INCREMENT,
+  `APPOINTMENTDATE` date DEFAULT NULL,
+  `TIME` time DEFAULT NULL,
+  `PATIENTID` int(11) DEFAULT NULL,
+  `STATUS` varchar(10) DEFAULT NULL,
+  `NOON` enum('AM','PM') DEFAULT NULL,
+  PRIMARY KEY (`PHYSICIANID`),
+  KEY `patientID` (`PATIENTID`),
+  CONSTRAINT `patientID` FOREIGN KEY (`PATIENTID`) REFERENCES `patientdetails` (`PATIENTID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `physicianappointments` */
+
+/*Table structure for table `physiciandetails` */
+
+DROP TABLE IF EXISTS `physiciandetails`;
+
+CREATE TABLE `physiciandetails` (
+  `PHYSICIAN_ID` int(10) NOT NULL AUTO_INCREMENT,
+  `PASSWORD` varchar(30) DEFAULT NULL,
+  `NAME` varchar(30) DEFAULT NULL,
+  `SEX` varchar(30) DEFAULT NULL,
+  `DOB` date DEFAULT NULL,
+  `ADDRESS` varchar(60) DEFAULT NULL,
+  `PHONE` varchar(10) DEFAULT NULL,
+  `QUALIFICATON` varchar(30) DEFAULT NULL,
+  `EMAIL` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`PHYSICIAN_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+/*Data for the table `physiciandetails` */
+
+/*Table structure for table `physicianprescription` */
+
+DROP TABLE IF EXISTS `physicianprescription`;
+
+CREATE TABLE `physicianprescription` (
+  `PRESCRIPTIONID` int(10) NOT NULL AUTO_INCREMENT,
+  `PATIENTIDS` int(10) DEFAULT NULL,
+  `PHYSICIANID` int(10) DEFAULT NULL,
+  `MEDICINE` varchar(30) DEFAULT NULL,
+  `DOSAGE` varchar(30) DEFAULT NULL,
+  `TIMESOFDAY` varchar(20) DEFAULT NULL,
+  `DATE` date DEFAULT NULL,
+  `PHARAMACYID` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`PRESCRIPTIONID`),
+  KEY `PATIENTIDSS` (`PATIENTIDS`),
+  KEY `PHYSICIANIDS` (`PHYSICIANID`),
+  KEY `PHARAMACYID` (`PHARAMACYID`),
+  CONSTRAINT `PATIENTIDSS` FOREIGN KEY (`PATIENTIDS`) REFERENCES `patientdetails` (`PATIENTID`),
+  CONSTRAINT `PHARAMACYID` FOREIGN KEY (`PHARAMACYID`) REFERENCES `pharmacydetails` (`PHARMACYID`),
+  CONSTRAINT `PHYSICIANIDS` FOREIGN KEY (`PHYSICIANID`) REFERENCES `physiciandetails` (`PHYSICIAN_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `physicianprescription` */
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
